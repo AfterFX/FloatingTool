@@ -31,20 +31,6 @@ public class MainActivity extends AppCompatActivity {
         context = this;
         contentView = getContentView();
 
-        FloatWindow floatWindow = new FloatWindow.With(this, layout)
-                .setModality(false)
-                .setMoveAble(true)
-                .setAutoAlign(true)
-                .setAlpha(0.5f)
-                .setWidth(WindowManager.LayoutParams.WRAP_CONTENT)
-                .setHeight(WindowManager.LayoutParams.MATCH_PARENT)
-                .create();
-// show
-        floatWindow.show();
-// remove
-        floatWindow.remove();
-
-
         findViewById(R.id.btn_show).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
