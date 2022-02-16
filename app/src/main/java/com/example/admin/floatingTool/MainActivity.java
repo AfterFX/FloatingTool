@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -45,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
         context = this;
         contentView = getContentView();
 
+        //saved data
+        SharedPreferences userDetails = context.getSharedPreferences("CoolPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = userDetails.edit();
+        boolean StoredNotification = userDetails.getBoolean("value", false);
+        isNotification = StoredNotification;
+        Switch cb = (Switch) findViewById(R.id.sw_notification);
+        cb.setChecked(Boolean.parseBoolean(String.valueOf(StoredNotification)));
 
 
         //Notification system
@@ -60,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         notification = builder.build();
         notificationManagerCompat = NotificationManagerCompat.from(this);
         //Notification system end
-
-
 
 
         findViewById(R.id.btn_show).setOnClickListener(new View.OnClickListener() {
@@ -122,6 +128,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isNotification = isChecked;
+                //save value
+                edit.clear();
+                edit.putBoolean("value", isChecked);
+                edit.commit();
             }
         });
     }
@@ -166,10 +176,6 @@ public class MainActivity extends AppCompatActivity {
         view.findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
-
                 mCountDownTimer.start();
                 Toast.makeText(context, "button2", Toast.LENGTH_SHORT).show();
             }

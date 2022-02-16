@@ -47,6 +47,8 @@
         android:layout_height="52dp"
         android:text=" notification" />
 
+
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
