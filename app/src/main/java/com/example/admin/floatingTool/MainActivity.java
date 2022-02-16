@@ -1,13 +1,21 @@
 package com.example.admin.floatingTool;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,10 +27,16 @@ public class MainActivity extends AppCompatActivity {
     Switch swAutoalign;
     Switch swModely;
     Switch swMove;
+    Switch swNotification;
 
     boolean isAutoAlign;
     boolean isModality;
     boolean isMoveAble;
+    boolean isNotification;
+
+    NotificationManagerCompat notificationManagerCompat;
+    Notification notification;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +44,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         context = this;
         contentView = getContentView();
+
+
+
+        //Notification system
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel = new NotificationChannel("myCh", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "myCh")
+                .setSmallIcon(android.R.drawable.stat_notify_sync)
+                .setContentTitle("First Notification")
+                .setContentText("This is the body of message");
+        notification = builder.build();
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+        //Notification system end
+
+
+
 
         findViewById(R.id.btn_show).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         swAutoalign = (Switch) findViewById(R.id.sw_autoalign);
         swModely = (Switch) findViewById(R.id.sw_modely);
         swMove = (Switch) findViewById(R.id.sw_move);
+        swNotification = (Switch) findViewById(R.id.sw_notification);
 
         swAutoalign.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -81,6 +115,13 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isMoveAble = isChecked;
                 initFloatWindow(contentView);
+            }
+        });
+
+        swNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                isNotification = isChecked;
             }
         });
     }
@@ -120,6 +161,15 @@ public class MainActivity extends AppCompatActivity {
         view.findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                TextView myTextView1 = (TextView)view.findViewById (R.id.testukas);
+                myTextView1.setText ("this is my textview1 test");
+
+                if(isNotification){
+                    notificationManagerCompat.notify(1, notification);
+                }
+
+
                 Toast.makeText(context, "button2", Toast.LENGTH_SHORT).show();
             }
         });

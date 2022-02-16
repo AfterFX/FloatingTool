@@ -21,20 +21,30 @@
 
         <Button
             android:id="@+id/button"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="button" />
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="button2" />
 
         <Button
             android:id="@+id/button3"
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Remove" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/testukas"
+        android:layout_width="133dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="weafafawfawf"
+        android:textStyle="bold"
+        android:focusable="true"
+        />
 </LinearLayout>
