@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/btn_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="show" />
+
+    <Button
+        android:id="@+id/btn_remove"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="remove" />
+
+    <Button
+        android:id="@+id/btn_ops"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Authorize app suspension permissions" />
+
+    <Switch
+        android:id="@+id/sw_autoalign"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text=" automatic welt" />
+
+    <Switch
+        android:id="@+id/sw_modely"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text=" Modal window (events cannot penetrate the floating window)" />
+
+    <Switch
+        android:id="@+id/sw_move"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:text=" draggable" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" ········" />
+
+</LinearLayout>
