@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -152,9 +152,14 @@ public class MainActivity extends AppCompatActivity {
     private View getContentView() {
         View view = LayoutInflater.from(context).inflate(R.layout.fv_test, null);
         final View ll_menu = view.findViewById(R.id.ll_btn);
+
+        TextView myTextView1 = (TextView)view.findViewById (R.id.testukas);
+        CountDownTimer mCountDownTimer = timer(myTextView1);
+
         view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCountDownTimer.cancel();
                 Toast.makeText(context, "button", Toast.LENGTH_SHORT).show();
             }
         });
@@ -162,14 +167,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                TextView myTextView1 = (TextView)view.findViewById (R.id.testukas);
-                myTextView1.setText ("this is my textview1 test");
-
-                if(isNotification){
-                    notificationManagerCompat.notify(1, notification);
-                }
 
 
+
+                mCountDownTimer.start();
                 Toast.makeText(context, "button2", Toast.LENGTH_SHORT).show();
             }
         });
@@ -190,6 +191,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         return view;
+    }
+
+    private CountDownTimer timer(TextView myTextView1) {
+        return new CountDownTimer(5000, 1000) {
+            public void onTick(long duration) {
+                //tTimer.setText("seconds remaining: " + millisUntilFinished / 1000);
+                //here you can have your logic to set text to edittext resource id
+                // Duration
+                long Mmin = (duration / 1000) / 60;
+                long Ssec = (duration / 1000) % 60;
+                if (Ssec < 10) {
+                    myTextView1.setText("" + Mmin + ":0" + Ssec);
+                } else myTextView1.setText("" + Mmin + ":" + Ssec);
+            }
+
+            public void onFinish() {
+                myTextView1.setText("00:00");
+                if(isNotification){
+                    notificationManagerCompat.notify(1, notification);
+                }
+            }
+        };
     }
 
     private View getBtn() {
