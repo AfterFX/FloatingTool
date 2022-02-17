@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private CountDownTimer timer(TextView myTextView1) {
-        return new CountDownTimer(5000, 1000) {
+        return new CountDownTimer(1000*60*4, 1000) {
             public void onTick(long duration) {
                 //tTimer.setText("seconds remaining: " + millisUntilFinished / 1000);
                 //here you can have your logic to set text to edittext resource id
