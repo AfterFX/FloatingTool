@@ -64,16 +64,20 @@ public class MainActivity extends AppCompatActivity {
         boolean StoredNotification = userDetails.getBoolean("isNotificationOn", false);
         boolean StoredPopUpVertical = userDetails.getBoolean("isPopupVerticalOn", false);
         boolean StoredVerticalBottom = userDetails.getBoolean("isVerticalBottomOn", false);
+        boolean StoredMoveAble = userDetails.getBoolean("isMoveAbleOn", false);
         isNotification = StoredNotification;
         isPopupVertical = StoredPopUpVertical;
         isVerticalBottom = StoredVerticalBottom;
+        isMoveAble = StoredMoveAble;
         timerValue = hour;
         Switch cb = (Switch) findViewById(R.id.sw_notification);
         Switch cb1 = (Switch) findViewById(R.id.sw_popupVertical);
         Switch cb2 = (Switch) findViewById(R.id.sw_popUpVertical2);
+        Switch cb3 = (Switch) findViewById(R.id.sw_move);
         cb.setChecked(Boolean.parseBoolean(String.valueOf(StoredNotification)));
         cb1.setChecked(Boolean.parseBoolean(String.valueOf(StoredPopUpVertical)));
         cb2.setChecked(Boolean.parseBoolean(String.valueOf(StoredVerticalBottom)));
+        cb3.setChecked(Boolean.parseBoolean(String.valueOf(StoredMoveAble)));
         //saved data end
 
 
@@ -163,6 +167,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isMoveAble = isChecked;
+                //save value
+                edit.putBoolean("isMoveAbleOn", isChecked);
+                edit.commit();
+
                 initFloatWindow(contentView);
             }
         });
@@ -217,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
                 .setAutoAlign(isAutoAlign)
                 .setModality(isModality)
                 .setMoveAble(isMoveAble)
+//                .setStartLocation(100, 100)
                 .create();
         floatWindow.show();
     }
