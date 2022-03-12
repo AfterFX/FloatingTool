@@ -53,10 +53,10 @@
             android:text=" notification" />
 
         <Switch
-            android:id="@+id/sw_popUpVertical"
+            android:id="@+id/sw_popupVertical"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:text="popUp vertical" />
+            android:text="popup vertical" />
 
         <Switch
             android:id="@+id/sw_popUpVertical2"

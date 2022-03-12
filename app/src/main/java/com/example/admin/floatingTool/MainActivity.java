@@ -35,15 +35,13 @@ public class MainActivity extends AppCompatActivity {
     Switch swModely;
     Switch swMove;
     Switch swNotification;
-    Switch swPopUpVercical;
-    Switch swVerticalBottom;
+    Switch swPopupVercical, swVerticalBottom;
 
     boolean isAutoAlign;
     boolean isModality;
     boolean isMoveAble;
     boolean isNotification;
-    boolean isPopUpVertical;
-    boolean isVerticalBottom;
+    boolean isPopupVertical, isVerticalBottom;
     Number timerValue;
 
     NotificationManagerCompat notificationManagerCompat;
@@ -64,16 +62,18 @@ public class MainActivity extends AppCompatActivity {
         Number min = userDetails.getInt("min", 0);
         Number sec = userDetails.getInt("sec", 0);
         boolean StoredNotification = userDetails.getBoolean("isNotificationOn", false);
-        boolean StoredPopUpVertical = userDetails.getBoolean("isPopUpVerticalOn", false);
+        boolean StoredPopUpVertical = userDetails.getBoolean("isPopupVerticalOn", false);
         boolean StoredVerticalBottom = userDetails.getBoolean("isVerticalBottomOn", false);
         isNotification = StoredNotification;
-        isPopUpVertical = StoredPopUpVertical;
+        isPopupVertical = StoredPopUpVertical;
         isVerticalBottom = StoredVerticalBottom;
         timerValue = hour;
         Switch cb = (Switch) findViewById(R.id.sw_notification);
+        Switch cb1 = (Switch) findViewById(R.id.sw_popupVertical);
+        Switch cb2 = (Switch) findViewById(R.id.sw_popUpVertical2);
         cb.setChecked(Boolean.parseBoolean(String.valueOf(StoredNotification)));
-        Switch cb1 = (Switch) findViewById(R.id.sw_popUpVertical);
         cb1.setChecked(Boolean.parseBoolean(String.valueOf(StoredPopUpVertical)));
+        cb2.setChecked(Boolean.parseBoolean(String.valueOf(StoredVerticalBottom)));
         //saved data end
 
 
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         swModely = (Switch) findViewById(R.id.sw_modely);
         swMove = (Switch) findViewById(R.id.sw_move);
         swNotification = (Switch) findViewById(R.id.sw_notification);
-        swPopUpVercical = (Switch) findViewById(R.id.sw_popUpVertical);
+        swPopupVercical = (Switch) findViewById(R.id.sw_popupVertical);
         swVerticalBottom = (Switch) findViewById(R.id.sw_popUpVertical2);
 
         swAutoalign.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -177,12 +177,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        swPopUpVercical.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        swPopupVercical.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                isPopUpVertical = isChecked;
+                isPopupVertical = isChecked;
                 //save value
-                edit.putBoolean("isPopUpVerticalOn", isChecked);
+                edit.putBoolean("isPopupVerticalOn", isChecked);
                 edit.commit();
 
                 contentView = getContentView();
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void PopUpVertical(LinearLayout popUp) {
-        if(isPopUpVertical){
+        if(isPopupVertical){
             popUp.setOrientation(LinearLayout.VERTICAL);
         }else{
             popUp.setOrientation(LinearLayout.HORIZONTAL);
