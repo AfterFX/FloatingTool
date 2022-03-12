@@ -114,7 +114,7 @@ public class FloatWindow {
 
     private void initWindowManager() {
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        //获取一个DisplayMetrics对象，该对象用来描述关于显示器的一些信息，例如其大小，密度和字体缩放。
+        //Gets a DisplayMetrics object that describes some information about the display, such as its size, density, and font scaling.
         mDisplayMetrics = new DisplayMetrics();
         mWindowManager.getDefaultDisplay().getMetrics(mDisplayMetrics);
     }
@@ -301,8 +301,8 @@ public class FloatWindow {
 
         public FloatView(Context context) {
             super(context);
-            //这里由于一个ViewGroup不能add一个已经有Parent的contentView,所以需要先判断contentView是否有Parent
-            //如果有则需要将contentView先移除
+            //Here, since a ViewGroup cannot add a contentView that already has a Parent, it is necessary to first determine whether the contentView has a Parent
+            //If there is, you need to remove the contentView first
             if (contentView.getParent() != null && contentView.getParent() instanceof ViewGroup) {
                 ((ViewGroup) contentView.getParent()).removeView(contentView);
             }
@@ -318,8 +318,8 @@ public class FloatWindow {
          */
         @Override
         public boolean onInterceptTouchEvent(MotionEvent ev) {
-            //此回调如果返回true则表示拦截TouchEvent由自己处理，false表示不拦截TouchEvent分发出去由子view处理
-            //解决方案：如果是拖动父View则返回true调用自己的onTouch改变位置，是点击则返回false去响应子view的点击事件
+            //If this callback returns true, it means that the intercepted TouchEvent is handled by itself, and false means that the TouchEvent is not intercepted and dispatched to be handled by the child view.
+            //Solution: If you are dragging the parent View, return true to call your own onTouch to change the position, and if it is a click, return false to respond to the click event of the child view.
             boolean isIntercept = false;
             switch (ev.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -330,7 +330,7 @@ public class FloatWindow {
                     isIntercept = false;
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    //在一些dpi较高的设备上点击view很容易触发 ACTION_MOVE，所以此处做一个过滤
+                    //Clicking on view on some devices with higher dpi is easy to trigger ACTION_MOVE, so do a filter here
                     isIntercept = Math.abs(ev.getX() - interceptX) > MINIMUM_OFFSET && Math.abs(ev.getY() - interceptY) > MINIMUM_OFFSET;
                     break;
                 case MotionEvent.ACTION_UP:
@@ -348,7 +348,7 @@ public class FloatWindow {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
 
-            //获取触摸点相对于屏幕左上角的坐标
+            //Get the coordinates of the touch point relative to the upper left corner of the screen
             rowX = event.getRawX();
             rowY = event.getRawY() - getStatusBarHeight(mContext);
 
@@ -377,8 +377,8 @@ public class FloatWindow {
          * @param event
          */
         private void actionOutSide(MotionEvent event) {
-            //由于我们在layoutParams中添加了FLAG_WATCH_OUTSIDE_TOUCH标记，那么点击悬浮窗之外时此事件就会被响应
-            //这里可以用来扩展点击悬浮窗外部响应事件
+            //Since we added the FLAG_WATCH_OUTSIDE_TOUCH flag in layoutParams, this event will be responded when clicking outside the floating window
+            //This can be used to extend the click outside the floating window to respond to events
         }
 
         /**
@@ -398,7 +398,7 @@ public class FloatWindow {
          * @param event
          */
         private void actionMove(MotionEvent event) {
-            //拖动事件下一直计算坐标 然后更新悬浮窗位置
+            //The coordinates are always calculated under the drag event, and then the floating window position is updated
             updateLocation((rowX - downX), (rowY - downY));
         }
 
@@ -433,13 +433,13 @@ public class FloatWindow {
                 mLayoutParams.x = mDisplayMetrics.widthPixels;
             }
 
-            //这里使用ValueAnimator来平滑计算起始X坐标到结束X坐标之间的值，并更新悬浮窗位置
+            //Here, ValueAnimator is used to smoothly calculate the value between the starting X coordinate and the ending X coordinate, and update the floating window position
             ValueAnimator animator = ValueAnimator.ofFloat(fromX, mLayoutParams.x);
             animator.setDuration(300);
             animator.addUpdateListener(animation -> {
-                //这里会返回fromX ~ mLayoutParams.x之间经过计算的过渡值
+                //This will return the calculated transition value between fromX ~ mLayoutParams.x
                 float toX = (float) animation.getAnimatedValue();
-                //我们直接使用这个值来更新悬浮窗位置
+                //We use this value directly to update the floating window position
                 updateLocation(toX, mLayoutParams.y);
             });
             animator.start();

@@ -5,6 +5,8 @@
       <map>
         <entry key="..\:/Users/after/Desktop/FloatingTool/app/src/main/res/layout/activity_main.xml" value="0.25181159420289856" />
         <entry key="..\:/Users/after/Desktop/FloatingTool/app/src/main/res/layout/fv_test.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fv_test.xml" value="0.28804347826086957" />
       </map>
     </option>
   </component>
@@ -59,7 +61,7 @@
       </value>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
