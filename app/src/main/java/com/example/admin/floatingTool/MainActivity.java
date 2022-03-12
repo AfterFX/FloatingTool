@@ -231,8 +231,8 @@ public class MainActivity extends AppCompatActivity {
         View view = LayoutInflater.from(context).inflate(R.layout.fv_test, null);
         final View ll_menu = view.findViewById(R.id.ll_btn);
 
-        TextView myTextView1 = (TextView)view.findViewById (R.id.hrs);
-        CountDownTimer mCountDownTimer = timer(myTextView1);
+        TextView txt_timer = (TextView)view.findViewById (R.id.hrs);
+        CountDownTimer mCountDownTimer = timer(txt_timer);
 
         LinearLayout popUp = (LinearLayout) view.findViewById(R.id.ll_btn);
         LinearLayout popUp1 = (LinearLayout) view.findViewById(R.id.popup);
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private CountDownTimer timer(TextView myTextView1) {
+    private CountDownTimer timer(TextView txt_timer) {
         return new CountDownTimer(1000*1*4, 1000) {
             public void onTick(long duration) {
                 //tTimer.setText("seconds remaining: " + millisUntilFinished / 1000);
@@ -300,12 +300,12 @@ public class MainActivity extends AppCompatActivity {
                 long Mmin = (duration / 1000) / 60;
                 long Ssec = (duration / 1000) % 60;
                 if (Ssec < 10) {
-                    myTextView1.setText("" + Mmin + ":0" + Ssec);
-                } else myTextView1.setText("" + Mmin + ":" + Ssec);
+                    txt_timer.setText("" + Mmin + ":0" + Ssec);
+                } else txt_timer.setText("" + Mmin + ":" + Ssec);
             }
 
             public void onFinish() {
-                myTextView1.setText("00:00");
+                txt_timer.setText("00:00");
                 if(isNotification){
                     notificationManagerCompat.notify(1, notification);
                 }
