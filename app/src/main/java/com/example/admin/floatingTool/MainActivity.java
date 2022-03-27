@@ -1,9 +1,12 @@
 package com.example.admin.floatingTool;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
     Context context;
     FloatWindow floatWindow;
     View contentView;
-    EditText editName, editPassword;
-    TextView result;
-    Button buttonSubmit, buttonReset;
+    EditText editHrs, editMin, editSec;
+    Button buttonSubmit;
+
+    CountDownTimer mCountDownTimer;
 
     Switch swAutoalign;
     Switch swModely;
@@ -42,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isMoveAble;
     boolean isNotification;
     boolean isPopupVertical, isVerticalBottom;
-    Number timerValue;
+    int hourValue, minValue, secValue = 0;
 
     NotificationManagerCompat notificationManagerCompat;
     Notification notification;
@@ -61,29 +65,41 @@ public class MainActivity extends AppCompatActivity {
         Number hour = userDetails.getInt("hour", 0);
         Number min = userDetails.getInt("min", 0);
         Number sec = userDetails.getInt("sec", 0);
+        boolean StoredAutoAlign = userDetails.getBoolean("isAutoAlignOn", false);
         boolean StoredNotification = userDetails.getBoolean("isNotificationOn", false);
         boolean StoredPopUpVertical = userDetails.getBoolean("isPopupVerticalOn", false);
         boolean StoredVerticalBottom = userDetails.getBoolean("isVerticalBottomOn", false);
         boolean StoredMoveAble = userDetails.getBoolean("isMoveAbleOn", false);
+        boolean StoredModality = userDetails.getBoolean("isModality", false);
+        isAutoAlign = StoredAutoAlign;
         isNotification = StoredNotification;
         isPopupVertical = StoredPopUpVertical;
         isVerticalBottom = StoredVerticalBottom;
         isMoveAble = StoredMoveAble;
-        timerValue = hour;
-        Switch cb = (Switch) findViewById(R.id.sw_notification);
-        Switch cb1 = (Switch) findViewById(R.id.sw_popupVertical);
-        Switch cb2 = (Switch) findViewById(R.id.sw_popUpVertical2);
-        Switch cb3 = (Switch) findViewById(R.id.sw_move);
-        cb.setChecked(Boolean.parseBoolean(String.valueOf(StoredNotification)));
-        cb1.setChecked(Boolean.parseBoolean(String.valueOf(StoredPopUpVertical)));
-        cb2.setChecked(Boolean.parseBoolean(String.valueOf(StoredVerticalBottom)));
-        cb3.setChecked(Boolean.parseBoolean(String.valueOf(StoredMoveAble)));
+        isModality = StoredModality;
+        hourValue = (int) hour; minValue = (int) min; secValue = (int) sec;
+        Switch cb = (Switch) findViewById(R.id.sw_autoalign);
+        Switch cb1 = (Switch) findViewById(R.id.sw_notification);
+        Switch cb2 = (Switch) findViewById(R.id.sw_popupVertical);
+        Switch cb3 = (Switch) findViewById(R.id.sw_popUpVertical2);
+        Switch cb4 = (Switch) findViewById(R.id.sw_move);
+        Switch cb5 = (Switch) findViewById(R.id.sw_modely);
+        cb.setChecked(Boolean.parseBoolean(String.valueOf(StoredAutoAlign)));
+        cb1.setChecked(Boolean.parseBoolean(String.valueOf(StoredNotification)));
+        cb2.setChecked(Boolean.parseBoolean(String.valueOf(StoredPopUpVertical)));
+        cb3.setChecked(Boolean.parseBoolean(String.valueOf(StoredVerticalBottom)));
+        cb4.setChecked(Boolean.parseBoolean(String.valueOf(StoredMoveAble)));
+        cb5.setChecked(Boolean.parseBoolean(String.valueOf(StoredModality)));
         //saved data end
 
 
         contentView = getContentView();
-        TextView editName1 = findViewById (R.id.editName);
-        editName1.setText(String.valueOf(timerValue));
+        TextView viewHrs = findViewById (R.id.time_hrs);
+        TextView viewMin = findViewById (R.id.time_min);
+        TextView viewSec = findViewById (R.id.time_sec);
+        viewHrs.setText(String.valueOf(hourValue));
+        viewMin.setText(String.valueOf(minValue));
+        viewSec.setText(String.valueOf(secValue));
 
 
         //Notification system
@@ -94,24 +110,44 @@ public class MainActivity extends AppCompatActivity {
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "myCh")
                 .setSmallIcon(android.R.drawable.stat_notify_sync)
-                .setContentTitle("First Notification")
-                .setContentText("This is the body of message");
+                .setContentTitle("Time is over")
+                .setContentText("Hey! Time is over");
         notification = builder.build();
         notificationManagerCompat = NotificationManagerCompat.from(this);
         //Notification system end
 
 
-        editName  = (EditText) findViewById(R.id.editName);
+        editHrs = (EditText) findViewById(R.id.time_hrs);
+        editMin = (EditText) findViewById(R.id.time_min);
+        editSec = (EditText) findViewById(R.id.time_sec);
         buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
         // Attaching OnClick listener to the submit button
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // get text from EditText name view
-                String name = editName.getText().toString();
-                edit.putInt("hour", Integer.parseInt(name));
-                edit.commit();
-                Toast.makeText(context, name, Toast.LENGTH_SHORT).show();
+
+               if(editHrs.getText().toString().matches("") || editMin.getText().toString().matches("") || editSec.getText().toString().matches("")){
+                   Toast.makeText(context, "Please enter number", Toast.LENGTH_SHORT).show();
+               }else{
+                   String hrs = editHrs.getText().toString();
+                   String min = editMin.getText().toString();
+                   String sec = editSec.getText().toString();
+                   hourValue = Integer.parseInt(hrs);
+                   minValue = Integer.parseInt(min);
+                   secValue = Integer.parseInt(sec);
+
+                   edit.putInt("hour", Integer.parseInt(hrs));
+                   edit.putInt("min", Integer.parseInt(min));
+                   edit.putInt("sec", Integer.parseInt(sec));
+                   edit.commit();
+
+                   if (mCountDownTimer != null) {
+                       mCountDownTimer.cancel();
+                       mCountDownTimer.onFinish();
+                   }
+                   Toast.makeText(context, hrs + ":" + min + ":" + sec, Toast.LENGTH_SHORT).show();
+               }
             }
         });
 
@@ -153,6 +189,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isAutoAlign = isChecked;
+                //save value
+                edit.putBoolean("isAutoAlignOn", isChecked);
+                edit.commit();
                 initFloatWindow(contentView);
             }
         });
@@ -160,6 +199,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 isModality = isChecked;
+                //save value
+                edit.putBoolean("isModality", isChecked);
+                edit.commit();
                 initFloatWindow(contentView);
             }
         });
@@ -170,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
                 //save value
                 edit.putBoolean("isMoveAbleOn", isChecked);
                 edit.commit();
-
                 initFloatWindow(contentView);
             }
         });
@@ -211,6 +252,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void RestartApp() {
+        Intent mStartActivity = new Intent(context, MainActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(context, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, 10000, mPendingIntent);
+        System.exit(0);
+    }
+
     /**
      * initialize floatWindow
      *
@@ -237,40 +287,53 @@ public class MainActivity extends AppCompatActivity {
      */
     private View getContentView() {
 
-        View view = LayoutInflater.from(context).inflate(R.layout.fv_test, null);
-        final View ll_menu = view.findViewById(R.id.ll_btn);
+        View fv_test = LayoutInflater.from(context).inflate(R.layout.fv_test, null);
+        final View ll_menu = fv_test.findViewById(R.id.ll_btn);
 
-        TextView txt_timer = (TextView)view.findViewById (R.id.hrs);
-        CountDownTimer mCountDownTimer = timer(txt_timer);
+        TextView txt_timer = (TextView)fv_test.findViewById (R.id.timer);
 
-        LinearLayout popUp = (LinearLayout) view.findViewById(R.id.ll_btn);
-        LinearLayout popUp1 = (LinearLayout) view.findViewById(R.id.popup);
+
+        LinearLayout popUp = (LinearLayout) fv_test.findViewById(R.id.ll_btn);
+        LinearLayout popUp1 = (LinearLayout) fv_test.findViewById(R.id.popup);
 
         PopUpVertical(popUp);
         VerticalBottom(popUp1);
 
 
-        view.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+        fv_test.findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCountDownTimer.cancel();
-                Toast.makeText(context, "button", Toast.LENGTH_SHORT).show();
+                if (mCountDownTimer == null) {
+                    Toast.makeText(context, "there is nothing to stop", Toast.LENGTH_SHORT).show();
+                }else{
+                    mCountDownTimer.cancel();
+                    Toast.makeText(context, "time stopped", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-        view.findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+        fv_test.findViewById(R.id.timer).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mCountDownTimer == null) {
+//                    mCountDownTimer.cancel();
+                    mCountDownTimer = null;
+                    mCountDownTimer = timer(txt_timer);
+                }else{
+                    mCountDownTimer.cancel();
+                    mCountDownTimer = null;
+                    mCountDownTimer = timer(txt_timer);
+                }
                 mCountDownTimer.start();
-                Toast.makeText(context, "button2", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "timing started", Toast.LENGTH_SHORT).show();
             }
         });
-        view.findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+        fv_test.findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 floatWindow.remove();
             }
         });
-        view.setOnClickListener(new View.OnClickListener() {
+        fv_test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ll_menu.getVisibility() == View.VISIBLE) {
@@ -280,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        return view;
+        return fv_test;
     }
 
     private void VerticalBottom(LinearLayout popUp1) {
@@ -301,7 +364,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private CountDownTimer timer(TextView txt_timer) {
-        return new CountDownTimer(1000*1*4, 1000) {
+        int th = 1000*60*60*hourValue;
+        int tm = 1000*60*minValue;
+        int ts = 1000*secValue;
+        return new CountDownTimer(th+tm+ts, 1000) {
             public void onTick(long duration) {
                 //tTimer.setText("seconds remaining: " + millisUntilFinished / 1000);
                 //here you can have your logic to set text to edittext resource id
@@ -314,13 +380,31 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                txt_timer.setText("00:00");
+                txt_timer.setText("Start");
                 if(isNotification){
                     notificationManagerCompat.notify(1, notification);
                 }
             }
         };
     }
+
+//    public class MyCountDownTimer extends CountDownTimer {
+////        MyCountDownTimer myCountDownTimer = new MyCountDownTimer(1000*1*10, 1000); // call this class
+//        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+//            super(millisInFuture, countDownInterval);
+//        }
+//        @Override
+//        public void onTick(long millisUntilFinished) {
+//            int progress = (int) (millisUntilFinished/1000);
+//            Log.d("test check", String.valueOf(progressBar.getMax()-progress));
+//            progressBar.setProgress(progressBar.getMax()-progress);
+//        }
+//        @Override
+//        public void onFinish() {
+////            finish();
+//              cancel();
+//        }
+//    }
 
     private View getBtn() {
         Button mBtn = new Button(this);

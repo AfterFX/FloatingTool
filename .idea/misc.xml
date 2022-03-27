@@ -5,8 +5,10 @@
       <map>
         <entry key="..\:/Users/after/Desktop/FloatingTool/app/src/main/res/layout/activity_main.xml" value="0.25181159420289856" />
         <entry key="..\:/Users/after/Desktop/FloatingTool/app/src/main/res/layout/fv_test.xml" value="0.25" />
+        <entry key="app/src/main/res/layout-notnight/progress_bar.xml" value="0.23867753623188406" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fv_test.xml" value="0.28804347826086957" />
+        <entry key="app/src/main/res/layout/progress_bar.xml" value="0.1734375" />
       </map>
     </option>
   </component>
