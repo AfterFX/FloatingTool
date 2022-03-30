@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         }
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "myCh")
                 .setSmallIcon(android.R.drawable.stat_notify_sync)
-                .setContentTitle("Time is over")
+                .setContentTitle(getTitle())
                 .setContentText("Hey! Time is over");
         notification = builder.build();
         notificationManagerCompat = NotificationManagerCompat.from(this);
