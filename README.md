@@ -1,3 +1,5 @@
+# This is fork
+
 # A useful class that makes it easier to create floating windows
 
 ### How to use
@@ -18,6 +20,6 @@ floatWindow.show();
 floatWindow.remove();
 ```
 ### Example
-![](floating.mp4)
+![](floating.gif)
 
 ### [READ MORE](http://www.jianshu.com/p/a23cfb8f2e5f)
