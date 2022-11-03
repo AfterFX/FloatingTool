@@ -18,6 +18,6 @@ floatWindow.show();
 floatWindow.remove();
 ```
 ### Example
-![](example.gif)
+![](floating.mp4)
 
 ### [READ MORE](http://www.jianshu.com/p/a23cfb8f2e5f)
